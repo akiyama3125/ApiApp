@@ -48,6 +48,8 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
 
         val nameTextView : TextView = view.findViewById(R.id.nameTextView)
 
+        val addressTextView : TextView = view.findViewById(R.id.addressTextView)
+
         val imageView: ImageView = view.findViewById(R.id.imageView)
 
         val favoriteImageView: ImageView = view.findViewById(R.id.favoriteImageView)
@@ -75,6 +77,7 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
                 }
             }
             nameTextView.text = data.name
+            addressTextView.text = data.address
             Picasso.get().load(data.logoImage).into(imageView)
             favoriteImageView.apply {
                 setImageResource(if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)

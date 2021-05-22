@@ -3,14 +3,16 @@ package jp.techacademy.takashige.apiapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_web_view.*
 
 
 class WebViewActivity: AppCompatActivity() {
-
-    private val viewPagerAdapter by lazy { ViewPagerAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,12 +23,18 @@ class WebViewActivity: AppCompatActivity() {
 
         if (state is Shop) {
             isFavorite = FavoriteShop.findBy(state.id) != null
+            if (isFavorite == true) {
+                button1.text = "削除"
+            } else {
+                button1.text = "登録"
+            }
             if (state.couponUrls.sp.isNotEmpty()) {
                 webView.loadUrl(state.couponUrls.sp)
             } else {
                 webView.loadUrl(state.couponUrls.pc)
             }
         } else if (state is FavoriteShop) {
+            button1.text = "削除"
             webView.loadUrl(state.url)
         }
 
@@ -45,6 +53,7 @@ class WebViewActivity: AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private fun onAddFavorite(shop: Shop) {
@@ -54,7 +63,6 @@ class WebViewActivity: AppCompatActivity() {
             imageUrl = shop.logoImage
             url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
         })
-        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
     private fun onAddFavorite(favoriteShop: FavoriteShop) {
@@ -64,7 +72,6 @@ class WebViewActivity: AppCompatActivity() {
             imageUrl = favoriteShop.imageUrl
             url = favoriteShop.url
         })
-        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
     private fun onDeleteFavorite(shop: Shop) {
@@ -99,14 +106,10 @@ class WebViewActivity: AppCompatActivity() {
 
     private fun deleteFavorite(shop: Shop) {
         FavoriteShop.delete(shop)
-        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_API] as ApiFragment).updateView()
-        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
     private fun deleteFavorite(favoriteShop: FavoriteShop) {
         FavoriteShop.delete(favoriteShop)
-        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_API] as ApiFragment).updateView()
-        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
 
