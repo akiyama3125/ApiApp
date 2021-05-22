@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
+import android.util.Log
 
 class MainActivity : AppCompatActivity(), FragmentCallback {
 
@@ -44,24 +45,54 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
-    override fun onDeleteFavorite(id: String) {
-        showConfirmDeleteFavoriteDialog(id)
+    override fun onAddFavorite(favoriteShop: FavoriteShop) {
+        FavoriteShop.insert(FavoriteShop().apply {
+            id = favoriteShop.id
+            name = favoriteShop.name
+            imageUrl = favoriteShop.imageUrl
+            url = favoriteShop.url
+        })
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
-    private fun showConfirmDeleteFavoriteDialog(id: String) {
+    override fun onDeleteFavorite(shop: Shop) {
+        showConfirmDeleteFavoriteDialog(shop)
+    }
+
+    override fun onDeleteFavorite(favoriteShop: FavoriteShop) {
+        showConfirmDeleteFavoriteDialog(favoriteShop)
+    }
+
+    private fun showConfirmDeleteFavoriteDialog(shop: Shop) {
         AlertDialog.Builder(this)
             .setTitle(R.string.delete_favorite_dialog_title)
             .setMessage(R.string.delete_favorite_dialog_message)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                deleteFavorite(id)
+                deleteFavorite(shop)
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->}
+            .create()
+            .show()
+    }
+    private fun showConfirmDeleteFavoriteDialog(favoriteShop: FavoriteShop) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.delete_favorite_dialog_title)
+            .setMessage(R.string.delete_favorite_dialog_message)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                deleteFavorite(favoriteShop)
             }
             .setNegativeButton(android.R.string.cancel) { _, _ ->}
             .create()
             .show()
     }
 
-    private fun deleteFavorite(id: String) {
-        FavoriteShop.delete(id)
+    private fun deleteFavorite(shop: Shop) {
+        FavoriteShop.delete(shop)
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_API] as ApiFragment).updateView()
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
+    }
+    private fun deleteFavorite(favoriteShop: FavoriteShop) {
+        FavoriteShop.delete(favoriteShop)
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_API] as ApiFragment).updateView()
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }

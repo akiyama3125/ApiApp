@@ -8,5 +8,9 @@ interface FragmentCallback {
 
     fun onAddFavorite(shop: Shop)
 
-    fun onDeleteFavorite(id: String)
+    fun onAddFavorite(favoriteShop: FavoriteShop)
+
+    fun onDeleteFavorite(shop: Shop)
+
+    fun onDeleteFavorite(favoriteShop: FavoriteShop)
 }

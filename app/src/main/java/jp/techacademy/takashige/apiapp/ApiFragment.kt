@@ -50,7 +50,7 @@ class ApiFragment: Fragment() {
                 fragmentCallback?.onAddFavorite(it)
             }
             onClickDeleteFavorite = {
-                fragmentCallback?.onDeleteFavorite(it.id)
+                fragmentCallback?.onDeleteFavorite(it)
             }
             onClickItem = {
                 fragmentCallback?.onClickItem(it)

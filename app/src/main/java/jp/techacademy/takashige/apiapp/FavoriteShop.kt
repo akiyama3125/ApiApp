@@ -34,10 +34,20 @@ open class FavoriteShop: RealmObject(), Serializable {
                 it.insertOrUpdate(favoriteShop)
             }
 
-        fun delete(id: String) =
+        fun delete(shop: Shop) =
             Realm.getDefaultInstance().use { realm ->
                 realm.where(FavoriteShop::class.java)
-                    .equalTo(FavoriteShop::id.name, id)
+                    .equalTo(FavoriteShop::id.name, shop.id)
+                    .findFirst()?.also { deleteShop ->
+                        realm.executeTransaction {
+                            deleteShop.deleteFromRealm()
+                        }
+                    }
+            }
+        fun delete(favoriteShop: FavoriteShop) =
+            Realm.getDefaultInstance().use { realm ->
+                realm.where(FavoriteShop::class.java)
+                    .equalTo(FavoriteShop::id.name, favoriteShop.id)
                     .findFirst()?.also { deleteShop ->
                         realm.executeTransaction {
                             deleteShop.deleteFromRealm()
