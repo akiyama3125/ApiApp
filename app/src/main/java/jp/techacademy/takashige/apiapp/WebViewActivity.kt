@@ -39,6 +39,11 @@ class WebViewActivity: AppCompatActivity() {
         }
 
         button1.setOnClickListener{
+            if (state is Shop) {
+                isFavorite = FavoriteShop.findBy(state.id) != null
+            } else if (state is FavoriteShop) {
+                isFavorite = FavoriteShop.findBy(state.id) != null
+            }
             if (isFavorite) {
                 if (state is Shop) {
                     onDeleteFavorite(state)
@@ -48,13 +53,19 @@ class WebViewActivity: AppCompatActivity() {
             } else {
                 if (state is Shop) {
                     onAddFavorite(state)
+                    button1.text = "削除"
                 } else if (state is FavoriteShop){
                     onAddFavorite(state)
+                    button1.text = "削除"
                 }
             }
         }
 
     }
+
+
+
+
 
     private fun onAddFavorite(shop: Shop) {
         FavoriteShop.insert(FavoriteShop().apply {
@@ -87,6 +98,7 @@ class WebViewActivity: AppCompatActivity() {
             .setMessage(R.string.delete_favorite_dialog_message)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 deleteFavorite(shop)
+                button1.text = "登録"
             }
             .setNegativeButton(android.R.string.cancel) { _, _ ->}
             .create()
@@ -98,6 +110,7 @@ class WebViewActivity: AppCompatActivity() {
             .setMessage(R.string.delete_favorite_dialog_message)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 deleteFavorite(favoriteShop)
+                button1.text = "登録"
             }
             .setNegativeButton(android.R.string.cancel) { _, _ ->}
             .create()
